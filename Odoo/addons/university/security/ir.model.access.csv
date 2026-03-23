@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_student_academic,access_student_academic,model_university_student,group_academic,1,1,1,1
+access_student_finance,access_student_finance,model_university_student,group_finance,1,0,0,0
+access_career_academic,access_career_academic,model_university_career,group_academic,1,1,1,1
+access_career_finance,access_career_finance,model_university_career,group_finance,1,0,0,0
+access_study_plan_academic,access_study_plan_academic,model_university_study_plan,group_academic,1,1,1,1
+access_study_plan_finance,access_study_plan_finance,model_university_study_plan,group_finance,1,0,0,0
+access_subject_academic,access_subject_academic,model_university_subject,group_academic,1,1,1,1
+access_subject_finance,access_subject_finance,model_university_subject,group_finance,1,0,0,0
+access_enrollment_academic,access_enrollment_academic,model_university_enrollment,group_academic,1,1,1,1
+access_teacher_academic,access_teacher_academic,model_university_teacher,group_academic,1,1,1,1
+access_teacher_finance,access_teacher_finance,model_university_teacher,group_finance,1,1,1,1

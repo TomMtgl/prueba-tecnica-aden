@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_university_root"
+              name="Gestion Universidad"
+              action="action_university_student"
+              sequence="10"/>
+    
+
+    <menuitem id="menu_university_academic"
+              name="Académico"
+              parent="menu_university_root"
+              sequence="10"/>
+    
+
+    <menuitem id="menu_university_admin"
+              name="Administración"
+              parent="menu_university_root"
+              sequence="20"/>
+    
+
+    <menuitem id="menu_university_students"
+              name="Estudiantes"
+              parent="menu_university_academic"
+              action="action_university_student"
+              sequence="10"/>
+    
+    <menuitem id="menu_university_careers"
+              name="Carreras"
+              parent="menu_university_academic"
+              action="action_university_career"
+              sequence="20"/>
+    
+    <menuitem id="menu_university_subjects"
+              name="Asignaturas"
+              parent="menu_university_academic"
+              action="action_university_subject"
+              sequence="30"/>
+    
+    <menuitem id="menu_university_enrollments"
+              name="Inscripciones"
+              parent="menu_university_academic"
+              action="action_university_enrollment"
+              sequence="40"/>
+    
+
+    <menuitem id="menu_university_teachers"
+              name="Profesores"
+              parent="menu_university_admin"
+              action="action_university_teacher"
+              sequence="10"/>
+    
+    <menuitem id="menu_university_study_plans"
+              name="Planes de Estudio"
+              parent="menu_university_admin"
+              action="action_university_study_plan"
+              sequence="20"/>
+</odoo>

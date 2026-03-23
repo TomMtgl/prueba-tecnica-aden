@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Carreras -->
+        <record id="career_ing_sistemas" model="university.career">
+            <field name="name">Ingeniería en Sistemas de Información</field>
+            <field name="code">ISI</field>
+            <field name="duration_years">5</field>
+            <field name="description">Carrera de grado en Ingeniería en Sistemas</field>
+        </record>
+        
+        <record id="career_ing_industrial" model="university.career">
+            <field name="name">Ingeniería Industrial</field>
+            <field name="code">IND</field>
+            <field name="duration_years">5</field>
+            <field name="description">Carrera de grado en Ingeniería Industrial</field>
+        </record>
+        
+        <!-- Planes de Estudio -->
+        <record id="plan_isi_2024" model="university.study_plan">
+            <field name="name">Plan 2024</field>
+            <field name="year">2024</field>
+            <field name="career_id" ref="career_ing_sistemas"/>
+            <field name="description">Plan de estudios 2024 para Ingeniería en Sistemas</field>
+        </record>
+        
+        <record id="plan_ind_2023" model="university.study_plan">
+            <field name="name">Plan 2023</field>
+            <field name="year">2023</field>
+            <field name="career_id" ref="career_ing_industrial"/>
+            <field name="description">Plan de estudios 2023 para Ingeniería Industrial</field>
+        </record>
+        
+        <!-- Profesores -->
+        <record id="teacher_garcia" model="university.teacher">
+            <field name="name">Juan</field>
+            <field name="last_name">García</field>
+            <field name="employee_id">PROF001</field>
+            <field name="email">juan.garcia@universidad.edu.ar</field>
+            <field name="phone">+54 11 1234-5678</field>
+            <field name="specialization">Matemática</field>
+            <field name="bank_name">Banco Nación</field>
+            <field name="bank_account">1234567890</field>
+            <field name="tax_id">20-12345678-9</field>
+        </record>
+        
+        <record id="teacher_rodriguez" model="university.teacher">
+            <field name="name">María</field>
+            <field name="last_name">Rodríguez</field>
+            <field name="employee_id">PROF002</field>
+            <field name="email">maria.rodriguez@universidad.edu.ar</field>
+            <field name="phone">+54 11 2345-6789</field>
+            <field name="specialization">Física</field>
+            <field name="bank_name">Banco Provincia</field>
+            <field name="bank_account">0987654321</field>
+            <field name="tax_id">27-98765432-1</field>
+        </record>
+        
+        <!-- Asignaturas -->
+        <record id="subject_analisis_1" model="university.subject">
+            <field name="name">Análisis Matemático 1</field>
+            <field name="code">MAT101</field>
+            <field name="study_plan_id" ref="plan_isi_2024"/>
+            <field name="year">1</field>
+            <field name="semester">1</field>
+            <field name="credits">8</field>
+            <field name="hours_per_week">6</field>
+            <field name="teacher_id" ref="teacher_garcia"/>
+            <field name="description">Introducción al cálculo diferencial e integral</field>
+        </record>
+        
+        <record id="subject_fisica_1" model="university.subject">
+            <field name="name">Física 1</field>
+            <field name="code">FIS101</field>
+            <field name="study_plan_id" ref="plan_isi_2024"/>
+            <field name="year">1</field>
+            <field name="semester">1</field>
+            <field name="credits">6</field>
+            <field name="hours_per_week">4</field>
+            <field name="teacher_id" ref="teacher_rodriguez"/>
+            <field name="description">Mecánica clásica y termodinámica</field>
+        </record>
+        
+        <record id="subject_algebra" model="university.subject">
+            <field name="name">Álgebra y Geometría Analítica</field>
+            <field name="code">MAT102</field>
+            <field name="study_plan_id" ref="plan_isi_2024"/>
+            <field name="year">1</field>
+            <field name="semester">1</field>
+            <field name="credits">8</field>
+            <field name="hours_per_week">6</field>
+            <field name="teacher_id" ref="teacher_garcia"/>
+        </record>
+        
+        <!-- Estudiantes -->
+        <record id="student_martinez" model="university.student">
+            <field name="name">Francisco</field>
+            <field name="last_name">Martinez</field>
+            <field name="student_id">2024001</field>
+            <field name="email">francisco.martinez@estudiantes.edu.ar</field>
+            <field name="phone">+54 11 9876-5432</field>
+            <field name="enrollment_date" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <record id="student_gonzalez" model="university.student">
+            <field name="name">María</field>
+            <field name="last_name">González</field>
+            <field name="student_id">2024002</field>
+            <field name="email">maria.gonzalez@estudiantes.edu.ar</field>
+            <field name="phone">+54 11 8765-4321</field>
+            <field name="enrollment_date" eval="(DateTime.now() - timedelta(days=25)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- Inscripciones - Ejemplo: Francisco Martinez inscripto en primer año -->
+        <record id="enrollment_martinez_analisis" model="university.enrollment">
+            <field name="student_id" ref="student_martinez"/>
+            <field name="career_id" ref="career_ing_sistemas"/>
+            <field name="study_plan_id" ref="plan_isi_2024"/>
+            <field name="subject_id" ref="subject_analisis_1"/>
+            <field name="state">enrolled</field>
+            <field name="enrollment_date" eval="(DateTime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <record id="enrollment_martinez_fisica" model="university.enrollment">
+            <field name="student_id" ref="student_martinez"/>
+            <field name="career_id" ref="career_ing_sistemas"/>
+            <field name="study_plan_id" ref="plan_isi_2024"/>
+            <field name="subject_id" ref="subject_fisica_1"/>
+            <field name="state">enrolled</field>
+            <field name="enrollment_date" eval="(DateTime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <record id="enrollment_gonzalez_analisis" model="university.enrollment">
+            <field name="student_id" ref="student_gonzalez"/>
+            <field name="career_id" ref="career_ing_sistemas"/>
+            <field name="study_plan_id" ref="plan_isi_2024"/>
+            <field name="subject_id" ref="subject_analisis_1"/>
+            <field name="state">enrolled</field>
+            <field name="enrollment_date" eval="(DateTime.now() - timedelta(days=18)).strftime('%Y-%m-%d')"/>
+        </record>
+    </data>
+</odoo>

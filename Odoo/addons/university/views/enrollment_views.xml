@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_enrollment_list" model="ir.ui.view">
+        <field name="name">university.enrollment.list</field>
+        <field name="model">university.enrollment</field>
+        <field name="arch" type="xml">
+            <list string="Inscripciones">
+                <field name="student_id"/>
+                <field name="career_id"/>
+                <field name="subject_id"/>
+                <field name="enrollment_date"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'approved'"/>
+                <field name="final_grade"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="view_enrollment_form" model="ir.ui.view">
+        <field name="name">university.enrollment.form</field>
+        <field name="model">university.enrollment</field>
+        <field name="arch" type="xml">
+            <form string="Inscripción">
+                <header>
+                    <button name="action_enroll" 
+                            string="Confirmar Inscripción" 
+                            type="object" 
+                            invisible="state != 'draft'" 
+                            class="oe_highlight"/>
+                    <button name="action_approve" 
+                            string="Aprobar" 
+                            type="object" 
+                            invisible="state != 'enrolled'" 
+                            class="oe_highlight"/>
+                    <button name="action_fail" 
+                            string="Desaprobar" 
+                            type="object" 
+                            invisible="state != 'enrolled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,enrolled,approved"/>
+                </header>
+                
+                <sheet>
+                    <group>
+                        <group string="Estudiante">
+                            <field name="student_id"/>
+                            <field name="enrollment_date"/>
+                        </group>
+                        <group string="Cursada">
+                            <field name="career_id"/>
+                            <field name="study_plan_id"/>
+                            <field name="subject_id"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Evaluación">
+                            <field name="final_grade"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Observaciones">
+                        <field name="notes" nolabel="1" placeholder="Notas adicionales..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_enrollment_search" model="ir.ui.view">
+        <field name="name">university.enrollment.search</field>
+        <field name="model">university.enrollment</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Inscripciones">
+                <field name="student_id"/>
+                <field name="career_id"/>
+                <field name="subject_id"/>
+                <filter string="Borradores" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Inscriptos" name="enrolled" domain="[('state', '=', 'enrolled')]"/>
+                <filter string="Aprobados" name="approved" domain="[('state', '=', 'approved')]"/>
+                <group expand="0" string="Agrupar por">
+                    <filter name="group_by_student" string="Estudiante" context="{'group_by': 'student_id'}"/>
+                    <filter name="group_by_career" string="Carrera" context="{'group_by': 'career_id'}"/>
+                    <filter name="group_by_subject" string="Asignatura" context="{'group_by': 'subject_id'}"/>
+                    <filter name="group_by_state" string="Estado" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_university_enrollment" model="ir.actions.act_window">
+        <field name="name">Inscripciones</field>
+        <field name="res_model">university.enrollment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

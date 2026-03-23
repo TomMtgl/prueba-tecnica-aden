@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    image: odoo:18.0
+    container_name: university-odoo
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - odoo-web-data:/var/lib/odoo
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+      - DB_NAME=university_db
+    networks:
+      - odoo-network
+
+  db:
+    image: postgres:15-alpine
+    container_name: university-odoo-db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    networks:
+      - odoo-network
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:
+
+networks:
+  odoo-network:
+    driver: bridge
