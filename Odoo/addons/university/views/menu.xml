@@ -36,6 +36,12 @@
               parent="menu_university_academic"
               action="action_university_subject"
               sequence="30"/>
+
+    <menuitem id="menu_university_courses"
+              name="Cursos"
+              parent="menu_university_academic"
+              action="action_university_course"
+              sequence="35"/>
     
     <menuitem id="menu_university_enrollments"
               name="Inscripciones"

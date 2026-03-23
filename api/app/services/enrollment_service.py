@@ -7,9 +7,11 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
 from typing import List
+from datetime import datetime
 
 from app.models.enrollment import Enrollment
 from app.models.student import Student
+from app.models.subject import Subject
 from app.models.course import Course
 from app.schemas.enrollment import EnrollmentCreate
 
@@ -32,7 +34,6 @@ class EnrollmentService:
         student_id = enrollment_data.student_id
         course_id = enrollment_data.course_id
         
-        # Verificar que el estudiante existe
         student = db.query(Student).filter(Student.id == student_id).first()
         if not student:
             raise HTTPException(
@@ -40,7 +41,6 @@ class EnrollmentService:
                 detail=f"Estudiante con ID {student_id} no encontrado"
             )
         
-        # Verificar que el curso existe
         course = db.query(Course).filter(Course.id == course_id).first()
         if not course:
             raise HTTPException(
@@ -48,7 +48,6 @@ class EnrollmentService:
                 detail=f"Curso con ID {course_id} no encontrado"
             )
         
-        # REGLA 1: Verificar que el estudiante no esté ya inscrito en este curso
         existing_enrollment = db.query(Enrollment).filter(
             Enrollment.student_id == student_id,
             Enrollment.course_id == course_id
@@ -57,21 +56,22 @@ class EnrollmentService:
         if existing_enrollment:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"El estudiante {student.full_name} ya está inscrito en el curso {course.name}"
+                detail=f"El estudiante {student.complete_name} ya está inscrito en el curso {course.name}"
             )
         
-        # REGLA 2: Verificar que el curso no esté lleno
         if course.is_full:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"El curso {course.name} está lleno. Capacidad máxima: {course.max_capacity}"
+                detail=f"El curso {course.name} está lleno. Capacidad máxima: {course.capacity}"
             )
         
-        # Crear la inscripción
         try:
             enrollment = Enrollment(
                 student_id=student_id,
-                course_id=course_id
+                course_id=course_id,
+                subject_id=course.subject_id,
+                enrollment_date=datetime.now().date(),
+                state='enrolled'
             )
             db.add(enrollment)
             db.commit()
@@ -92,7 +92,6 @@ class EnrollmentService:
         Raises:
             HTTPException: Si no se encuentra el estudiante
         """
-        # Verificar que el estudiante existe
         student = db.query(Student).filter(Student.id == student_id).first()
         if not student:
             raise HTTPException(
@@ -114,7 +113,6 @@ class EnrollmentService:
         Raises:
             HTTPException: Si no se encuentra el curso
         """
-        # Verificar que el curso existe
         course = db.query(Course).filter(Course.id == course_id).first()
         if not course:
             raise HTTPException(

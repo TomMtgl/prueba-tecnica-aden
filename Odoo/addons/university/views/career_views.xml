@@ -106,7 +106,7 @@
                                     <field name="name"/>
                                     <field name="year"/>
                                     <field name="semester"/>
-                                    <field name="teacher_id"/>
+                                    <field name="qualified_teacher_ids" widget="many2many_tags"/>
                                     <field name="enrollment_count" string="Inscriptos"/>
                                 </list>
                             </field>

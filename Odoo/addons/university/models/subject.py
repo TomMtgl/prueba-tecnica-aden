@@ -38,11 +38,14 @@ class Subject(models.Model):
     credits = fields.Integer(string='Créditos')
     hours_per_week = fields.Integer(string='Horas Semanales')
     
-    # Relación con profesor
-    teacher_id = fields.Many2one(
+    # Relación con profesores calificados para dictar esta materia
+    qualified_teacher_ids = fields.Many2many(
         'university.teacher',
-        string='Profesor',
-        ondelete='set null'
+        'subject_teacher_rel',
+        'subject_id',
+        'teacher_id',
+        string='Profesores Calificados',
+        help='Profesores que pueden dictar esta asignatura'
     )
     
     # Relaciones con inscripciones

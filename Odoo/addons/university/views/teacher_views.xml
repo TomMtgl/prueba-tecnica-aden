@@ -9,7 +9,7 @@
                 <field name="complete_name"/>
                 <field name="email"/>
                 <field name="phone"/>
-                <field name="subject_count" string="Asignaturas"/>
+                <field name="subject_count" string="Materias Calificadas"/>
             </list>
         </field>
     </record>
@@ -42,7 +42,7 @@
                         </group>
                     </group>
                     
-                    <group string="Información Bancaria - Para Pagos" groups="university.group_finance">
+                    <group string="Información Bancaria - Para Pagos" groups="university.group_finance,university.group_university_admin">
                         <group>
                             <field name="bank_name"/>
                             <field name="bank_account"/>
@@ -59,18 +59,28 @@
                     </group>
                     
                     <notebook>
-                        <page string="Asignaturas">
-                            <field name="subject_ids">
+                        <page string="Asignaturas Calificadas" name="qualified_subjects">
+                            <field name="qualified_subject_ids">
                                 <list>
                                     <field name="code"/>
                                     <field name="name"/>
                                     <field name="study_plan_id"/>
                                     <field name="year"/>
-                                    <field name="enrollment_count" string="Inscriptos"/>
+                                    <field name="semester"/>
                                 </list>
                             </field>
                         </page>
-                        <page string="Notas">
+                        <page string="Cursos Asignados" name="assigned_courses">
+                            <field name="course_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="subject_id"/>
+                                    <field name="capacity"/>
+                                    <field name="enrolled_count" string="Inscriptos"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notes">
                             <field name="notes" nolabel="1" placeholder="Observaciones sobre el docente..."/>
                         </page>
                     </notebook>

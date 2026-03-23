@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Forzamos la asignación del grupo de Administrador Universidad al usuario Admin por defecto de Odoo -->
+        <record id="base.user_admin" model="res.users">
+            <field name="groups_id" eval="[(4, ref('university.group_university_admin'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,75 @@
+version: '3.8'
+ 
+services:
+  # Base de datos PostgreSQL (compartida por Odoo y API)
+  db:
+    image: postgres:15-alpine
+    container_name: university-db
+    environment:
+      - POSTGRES_DB=odoo
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+    ports:
+      - "5432:5432"
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - university-network
+ 
+  # Odoo 18 con el módulo university
+  odoo:
+    image: odoo:18.0
+    container_name: university-odoo
+    # Solo instalamos el módulo, Odoo se encarga del resto
+    command: odoo --db_host=db --db_user=odoo --db_password=odoo -d odoo -i university
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./Odoo/addons:/mnt/extra-addons
+      - odoo-web-data:/var/lib/odoo
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+      - DB_NAME=odoo
+    networks:
+      - university-network
+
+  # API FastAPI conectada a la BD de Odoo
+  api:
+    build: ./api
+    container_name: university-api
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+    environment:
+      - DATABASE_URL=postgresql+psycopg://odoo:odoo@db:5432/odoo
+      - SECRET_KEY=Cl4v3Sup3rS3cr374xyz182
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - APP_NAME=Universidad API
+      - APP_VERSION=1.0.0
+      - DEBUG=True
+    networks:
+      - university-network
+    command: sh -c "python init_db.py && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+ 
+volumes:
+  odoo-web-data:
+  odoo-db-data:
+ 
+networks:
+  university-network:
+    driver: bridge

@@ -7,7 +7,6 @@ class Student(models.Model):
     """Modelo de Estudiante"""
     _name = 'university.student'
     _description = 'Estudiante'
-    _rec_name = 'complete_name'
     
     # Campos básicos
     name = fields.Char(string='Nombre', required=True)
@@ -44,10 +43,16 @@ class Student(models.Model):
         ('student_id_unique', 'UNIQUE(student_id)', 'La matrícula debe ser única'),
         ('email_unique', 'UNIQUE(email)', 'El email debe ser único'),
     ]
+
+    @api.depends('name', 'last_name')
+    def _compute_display_name(self):
+        """Genera la etiqueta visible del registro en Odoo 18"""
+        for record in self:
+            record.display_name = f"{record.name} {record.last_name}"
     
     @api.depends('name', 'last_name')
     def _compute_complete_name(self):
-        """Calcula el nombre completo"""
+        """Calcula el nombre completo para el campo persistente"""
         for record in self:
             record.complete_name = f"{record.name} {record.last_name}"
     

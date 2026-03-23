@@ -10,7 +10,7 @@
                 <field name="study_plan_id"/>
                 <field name="year"/>
                 <field name="semester"/>
-                <field name="teacher_id"/>
+                <field name="qualified_teacher_ids" widget="many2many_tags"/>
                 <field name="enrollment_count" string="Inscriptos" widget="badge"/>
             </list>
         </field>
@@ -22,16 +22,6 @@
         <field name="arch" type="xml">
             <form string="Asignatura">
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="%(action_university_enrollment)d"
-                                type="action"
-                                class="oe_stat_button"
-                                icon="fa-users"
-                                context="{'default_subject_id': id}">
-                            <field name="enrollment_count" widget="statinfo" string="Inscriptos"/>
-                        </button>
-                    </div>
-                    
                     <group>
                         <group>
                             <field name="name"/>
@@ -41,7 +31,7 @@
                         <group>
                             <field name="year"/>
                             <field name="semester"/>
-                            <field name="teacher_id"/>
+                            <field name="active"/>
                         </group>
                     </group>
                     
@@ -51,15 +41,20 @@
                             <field name="hours_per_week"/>
                         </group>
                         <group>
-                            <field name="active"/>
+                            <field name="qualified_teacher_ids" widget="many2many_tags" placeholder="Asignar profesores..."/>
                         </group>
                     </group>
                     
-                    <group string="Descripción">
-                        <field name="description" nolabel="1" placeholder="Objetivos de la materia..."/>
-                    </group>
-                    
                     <notebook>
+                        <page string="Detalle de Profesores Calificados" name="qualified_teachers_list">
+                            <field name="qualified_teacher_ids" readonly="1">
+                                <list>
+                                    <field name="complete_name"/>
+                                    <field name="employee_id"/>
+                                    <field name="specialization"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Inscripciones">
                             <field name="enrollment_ids">
                                 <list>
@@ -69,6 +64,9 @@
                                     <field name="final_grade"/>
                                 </list>
                             </field>
+                        </page>
+                        <page string="Descripción" name="description">
+                            <field name="description" placeholder="Objetivos de la materia..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -84,11 +82,9 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="study_plan_id"/>
-                <field name="teacher_id"/>
                 <group expand="0" string="Agrupar por">
                     <filter name="group_by_plan" string="Plan de Estudios" context="{'group_by': 'study_plan_id'}"/>
                     <filter name="group_by_year" string="Año" context="{'group_by': 'year'}"/>
-                    <filter name="group_by_teacher" string="Profesor" context="{'group_by': 'teacher_id'}"/>
                 </group>
             </search>
         </field>

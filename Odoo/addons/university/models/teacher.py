@@ -29,11 +29,20 @@ class Teacher(models.Model):
     employee_id = fields.Char(string='Legajo', required=True)
     specialization = fields.Char(string='Especialización')
     
-    # Relaciones
-    subject_ids = fields.One2many(
+    # Relación Many2many inversa: Materias que este profesor está calificado para dar
+    qualified_subject_ids = fields.Many2many(
         'university.subject',
+        'subject_teacher_rel',
         'teacher_id',
-        string='Asignaturas que dicta'
+        'subject_id',
+        string='Asignaturas Calificadas'
+    )
+    
+    # Relación One2many: Cursos (comisiones) que dicta actualmente
+    course_ids = fields.One2many(
+        'university.course',
+        'teacher_id',
+        string='Cursos Asignados'
     )
     
     # Campos computados
@@ -59,8 +68,8 @@ class Teacher(models.Model):
         for record in self:
             record.complete_name = f"{record.name} {record.last_name}"
     
-    @api.depends('subject_ids')
+    @api.depends('qualified_subject_ids')
     def _compute_subject_count(self):
-        """Calcula la cantidad de asignaturas"""
+        """Calcula la cantidad de asignaturas calificadas"""
         for record in self:
-            record.subject_count = len(record.subject_ids)
+            record.subject_count = len(record.qualified_subject_ids)

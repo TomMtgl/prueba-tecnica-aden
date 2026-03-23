@@ -9,7 +9,6 @@ class Enrollment(models.Model):
     _description = 'Inscripción'
     _rec_name = 'display_name'
     
-    # Relación con estudiante
     student_id = fields.Many2one(
         'university.student',
         string='Estudiante',
@@ -17,7 +16,6 @@ class Enrollment(models.Model):
         ondelete='cascade'
     )
     
-    # Relación con carrera
     career_id = fields.Many2one(
         'university.career',
         string='Carrera',
@@ -25,7 +23,6 @@ class Enrollment(models.Model):
         ondelete='cascade'
     )
     
-    # Relación con plan de estudios
     study_plan_id = fields.Many2one(
         'university.study_plan',
         string='Plan de Estudios',
@@ -34,23 +31,28 @@ class Enrollment(models.Model):
         domain="[('career_id', '=', career_id)]"
     )
     
-    # Relación con asignatura
-    subject_id = fields.Many2one(
-        'university.subject',
-        string='Asignatura',
+    course_id = fields.Many2one(
+        'university.course',
+        string='Curso/Comisión',
         required=True,
         ondelete='cascade',
         domain="[('study_plan_id', '=', study_plan_id)]"
     )
     
-    # Información de inscripción
+
+    subject_id = fields.Many2one(
+        related='course_id.subject_id',
+        string='Asignatura',
+        readonly=True,
+        store=True
+    )
+    
     enrollment_date = fields.Date(
         string='Fecha de Inscripción',
         default=fields.Date.today,
         required=True
     )
     
-    # Estado de la inscripción
     state = fields.Selection([
         ('draft', 'Borrador'),
         ('enrolled', 'Inscripto'),
@@ -59,19 +61,19 @@ class Enrollment(models.Model):
         ('withdrawn', 'Retirado'),
     ], string='Estado', default='draft', required=True)
     
-    # Calificaciones
+
     final_grade = fields.Float(string='Nota Final')
     
-    # Notas
+
     notes = fields.Text(string='Observaciones')
     
-    # Campo display
+
     display_name = fields.Char(string='Nombre', compute='_compute_display_name')
     
-    # Estado activo
+
     active = fields.Boolean(string='Activo', default=True)
     
-    # Restricción: Un estudiante no puede inscribirse dos veces a la misma asignatura
+
     _sql_constraints = [
         ('student_subject_unique', 
          'UNIQUE(student_id, subject_id)', 
